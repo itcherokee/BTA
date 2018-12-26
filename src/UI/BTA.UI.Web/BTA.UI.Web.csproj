@@ -12,4 +12,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\BTA.Core.ApplicationServices\BTA.Core.ApplicationServices.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\BTA.Data\BTA.Data.csproj" />
+  </ItemGroup>
+
 </Project>
