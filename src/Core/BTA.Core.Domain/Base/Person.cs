@@ -1,5 +1,7 @@
 ﻿namespace BTA.Core.Domain.Base
 {
+    using System;
+
     public abstract class Person : BaseModel<string>
     {
         public string FirstNameEng { get; set; }
@@ -13,5 +15,7 @@
         public string MiddleNameLocal { get; set; }
 
         public string LastNameLocal { get; set; }
+
+        public DateTime? BirthDate { get; set; }
     }
 }

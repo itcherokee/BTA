@@ -9,4 +9,8 @@
     <ProjectReference Include="..\BTA.Core.Domain\BTA.Core.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repositories\" />
+  </ItemGroup>
+
 </Project>

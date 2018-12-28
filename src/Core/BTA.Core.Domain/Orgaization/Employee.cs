@@ -1,5 +1,7 @@
 ﻿namespace BTA.Core.Domain.Orgaization
 {
+    using System;
+
     using BTA.Core.Domain.Base;
 
     public class Employee : Person
@@ -15,5 +17,11 @@
         public Employee Manager { get; set; }
 
         public string Notes { get; set; }
+
+        public string EmployeeUniqueNumber { get; set; }
+
+        public DateTime StartDate { get; set; }
+
+        public DateTime? EndDate { get; set; }
     }
 }
