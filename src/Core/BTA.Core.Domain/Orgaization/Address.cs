@@ -4,16 +4,12 @@
 
     public class Address : BaseModel<int>
     {
-        public string Street { get; set; }
+        public string AddressLine1 { get; set; }
 
-        public string Details { get; set; }
+        public string AddressLine2 { get; set; }
 
-        public string Town { get; set; }
-
-        public string Zip { get; set; }
+        public Town Town { get; set; }
 
         public string District { get; set; }
-
-        public string Country { get; set; }
     }
 }
