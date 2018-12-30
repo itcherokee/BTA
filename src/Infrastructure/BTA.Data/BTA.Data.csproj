@@ -14,11 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\BTA.Core.ApplicationServices\BTA.Core.ApplicationServices.csproj" />
     <ProjectReference Include="..\..\Core\BTA.Core.Domain\BTA.Core.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>
