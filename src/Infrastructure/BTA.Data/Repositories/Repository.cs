@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
     using BTA.Core.ApplicationServices.Repositories;
 
@@ -11,46 +12,76 @@
 
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly BtaDbContext _dbContext;
+        private readonly BtaDbContext dbContext;
+
+        private readonly DbSet<T> dbSet;
 
         public Repository(BtaDbContext dbContext)
         {
-            _dbContext = dbContext;
+            this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            this.dbSet = this.dbContext.Set<T>();
         }
 
         public virtual T GetById(int id)
         {
-            return _dbContext.Set<T>().Find(id);
+            return this.dbSet.Find(id);
         }
 
         public virtual IEnumerable<T> List()
         {
-            return _dbContext.Set<T>().AsEnumerable();
+            return this.dbSet.AsEnumerable<T>();
         }
 
         public virtual IEnumerable<T> List(Expression<Func<T, bool>> predicate)
         {
-            return _dbContext.Set<T>()
-                   .Where(predicate)
-                   .AsEnumerable();
+            return this.dbSet.Where(predicate).AsEnumerable<T>();
         }
 
-        public void Add(T entity)
+        public virtual int Add(T entity)
         {
-            _dbContext.Set<T>().Add(entity);
-            _dbContext.SaveChanges();
+            this.dbSet.Add(entity);
+            return this.SaveChangesAsync().GetAwaiter().GetResult();
         }
 
-        public void Edit(T entity)
+        public virtual int Update(T entity)
         {
-            _dbContext.Entry(entity).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+            this.dbContext.Entry(entity).State = EntityState.Modified;
+            return this.dbContext.SaveChanges();
         }
 
-        public void Delete(T entity)
+        public virtual int Delete(T entity)
         {
-            _dbContext.Set<T>().Remove(entity);
-            _dbContext.SaveChanges();
+            var entry = this.dbContext.Entry(entity);
+            if(entry.Properties.Any(p => p.Metadata.Name == "IsDeleted"))
+            {
+                entry.Property("IsDeleted").CurrentValue = true;
+            }
+            //else
+            //{
+            //    entry.State = EntityState.Deleted;
+            //}
+
+            // dbContext.Set<T>().Remove(entity);
+            return this.dbContext.SaveChanges();
         }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            this.dbContext.ChangeTracker.DetectChanges();
+
+            var changedEntries = this.dbContext.ChangeTracker
+                .Entries()
+                .Where(e => e.Properties.Any(p => p.Metadata.Name == "UpdatedOn")
+                && e.State == EntityState.Modified);
+
+            foreach(var entry in changedEntries)
+            {
+                entry.Property("UpdatedOn").CurrentValue = DateTime.UtcNow;
+            }
+
+            return await this.dbContext.SaveChangesAsync();
+        }
+
+        public virtual void Dispose() => this.dbContext.Dispose();
     }
 }

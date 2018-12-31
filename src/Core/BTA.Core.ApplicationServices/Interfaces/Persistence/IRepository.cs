@@ -3,8 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
-    public interface IRepository<T> where T : class
+    public interface IRepository<T> : IDisposable where T : class
     {
         T GetById(int id);
 
@@ -12,10 +13,12 @@
 
         IEnumerable<T> List(Expression<Func<T, bool>> predicate);
 
-        void Add(T entity);
+        int Add(T entity);
 
-        void Delete(T entity);
+        int Delete(T entity);
 
-        void Edit(T entity);
+        int Update(T entity);
+
+        Task<int> SaveChangesAsync();
     }
 }

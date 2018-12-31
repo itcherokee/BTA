@@ -33,5 +33,7 @@
         protected override void OnModelCreating(ModelBuilder builder)
         {
         }
+
+        public override int SaveChanges() => this.SaveChangesAsync().GetAwaiter().GetResult();
     }
 }

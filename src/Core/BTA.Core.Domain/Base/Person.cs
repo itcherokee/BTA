@@ -17,5 +17,7 @@
         public string LastNameLocal { get; set; }
 
         public DateTime? BirthDate { get; set; }
+
+        public int MyProperty { get; set; }
     }
 }
